@@ -1,3 +1,8 @@
+---
+layout: posts
+title:  "Lagom without clustering"
+---
+
 There is a broad spectrum of reactive systems and maintaining an applicative cluster, inside each and every service, is probably on one end of this spectrum. Beware that Lagom’s default persistence mecanism is using Akka Cluster and you better know what you are doing before putting it in production.
 
 In this article I will provide an alternative to organization willing to deploy Lagom application with CQRS/ES but without having to manage a cluster on a dynamic containerized environment.
