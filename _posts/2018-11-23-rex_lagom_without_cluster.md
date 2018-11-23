@@ -27,29 +27,29 @@ First, we need to make sure chirp-impl, friend-impl, activity-stream-impl and lo
 
 We add the environment variable to set up `play.http.secret.key`, we set up `lagom.cluster.exit-jvm-when-system-terminated`, modified the [logback.xml](https://github.com/pocman/activator-lagom-java-chirper-jdbc/pull/1/files#diff-670ba0e888bcd1bc07e05c6100bd4937) files and added external service adresses configuration via environment variables.
 
-![friend-impl is using cassandra](./s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1542964318555_Capture+decran+2018-11-23+a+10.11.50.png)
+![friend-impl is using cassandra](/assets/images/s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1542964318555_Capture+decran+2018-11-23+a+10.11.50.png)
 
-![activity-stream is using friend and chirp services](./s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1542964367996_Capture+decran+2018-11-23+a+10.12.13.png)
+![activity-stream is using friend and chirp services](/assets/images/s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1542964367996_Capture+decran+2018-11-23+a+10.12.13.png)
 
-![load-test is using all lagom services](./s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1542964410161_Capture+decran+2018-11-23+a+10.13.21.png)
+![load-test is using all lagom services](/assets/images/s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1542964410161_Capture+decran+2018-11-23+a+10.13.21.png)
 
 
 Now, let’s focus on [chirp-impl/src/main/resources/application.conf](https://github.com/pocman/activator-lagom-java-chirper-jdbc/pull/1/files#diff-02ad5fa9fb2b6e612b3313e91c05b701).
 We need a way to add roles to each instance of chirp and to remove the state of the `ShardCoordinator` from the database.
 
-![](./s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1542965400295_Capture+decran+2018-11-23+a+10.29.51.png)
+![](/assets/images/s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1542965400295_Capture+decran+2018-11-23+a+10.29.51.png)
 
 
 Last, we need to be able to decrease the passivation timeout of persistence entities and to enforce that read side will only run on specific roles.
 
-![](./s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1542965425100_Capture+decran+2018-11-23+a+10.30.15.png)
+![](/assets/images/s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1542965425100_Capture+decran+2018-11-23+a+10.30.15.png)
 
 
 Using those variables, we can create a [docker-compose.yml](https://github.com/pocman/activator-lagom-java-chirper-jdbc/pull/1/files#diff-4e5e90c6228fd48698d074241c2ba760) that will start two instances of chirp. Singletons will run on chirp-impl-singleton, we rely on docker restart strategy and `lagom.cluster.exit-jvm-when-system-terminated=on` to make sure that the singletons will always run if docker is started.
 
 Regarding the entities, we set the passivation timeout at 1ms on chirp-impl-singleton and 30s on chirp-impl-service, this configuration will allow us to expose the consistency enforced by postgresql. **In production, you should set all passivation timeout at 1ms.**
 
-![](./s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1542966391448_Capture+decran+2018-11-23+a+10.46.12.png)
+![](/assets/images/s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1542966391448_Capture+decran+2018-11-23+a+10.46.12.png)
 
 ## **Passivation**
 
@@ -141,7 +141,7 @@ If the bootstrap failed, the instance might be in zombie mode, don’t forget to
 
 The [joining mecanism](https://doc.akka.io/docs/akka/2.5/common/cluster.html#state-diagram-for-the-member-states-akka-cluster-allow-weakly-up-members-off-) is straighforward.
 
-![](./s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1541522983699_member-states.png)
+![](/assets/images/s_D9B1CB23287EA31A6DC5090D56F7960B11B58392121952879DCF82D929486108_1541522983699_member-states.png)
 
 
 Notice that if an instance is marked as unreachable (because it was on a failing server or was shutdown by the orchestrator without timeout), the cluster will have to down the unreachable instance before accepting the joining one.
