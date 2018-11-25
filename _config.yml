@@ -266,7 +266,7 @@ defaults:
     values:
       layout: single
       author_profile: true
-      comments: true
+      comments: false
       read_time: false
       share: false
       related: false
