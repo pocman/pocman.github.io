@@ -1,5 +1,5 @@
 ---
-layout: posts
+comments: true
 title:  "Lagom without clustering"
 ---
 
